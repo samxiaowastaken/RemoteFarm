@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录错误</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-image: linear-gradient(to top, #dbf0ff 0%, #ffffff 100%); /* 调整背景为渐变色 */
+            font-family: Arial, sans-serif;
+        }
+        .wrapper {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 增强立体感的阴影 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .error-title {
+            margin: 20px;
+            font-size: 32px;
+            color: red;
+        }
+        .error-message {
+            margin: 10px;
+            font-size: 20px;
+        }
+        .back-button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            background-color: #007bff; /* 保持按钮颜色 */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 调整按钮的阴影 */
+            transition: box-shadow 0.3s, transform 0.1s; /* 保持过渡效果 */
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* 悬停时调整阴影以匹配之前的风格 */
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="error-title">登录错误</div>
+        <div class="error-message">{{reason}}</div>
+        <button onclick="location.href='/'" class="back-button">返回登录页</button>
+    </div>
+</body>
+</html>
