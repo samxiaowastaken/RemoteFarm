@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>退出失败</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-image: linear-gradient(to top, #dbf0ff 0%, #ffffff 100%);
+            font-family: Arial, sans-serif;
+        }
+        .wrapper {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .error-title {
+            margin: 20px;
+            font-size: 32px;
+            color: red;
+        }
+        .error-message {
+            margin: 10px;
+            font-size: 20px;
+        }
+        .back-button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transition: box-shadow 0.3s, transform 0.1s;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="error-title">退出失败</div>
+        <div class="error-message">您尚未登录，无法执行退出操作。</div>
+        <button onclick="location.href='/'" class="back-button">返回首页</button>
+    </div>
+</body>
+</html>
