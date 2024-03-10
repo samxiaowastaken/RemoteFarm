@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查看界面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: linear-gradient(to top, #dbf0ff 0%, #ffffff 100%); /* 更偏向白色的背景渐变色 */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            max-width: 960px;
+            width: 100%;
+            margin: auto;
+            padding: 0 20px;
+            gap: 20px;
+        }
+
+        .image-viewer, .right-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 更深的阴影 */
+            padding: 20px;
+        }
+
+        .image-viewer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .data-display, .control-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .data-display > p, .control-bar > button {
+            flex: 1 1 100%;
+            text-align: center;
+        }
+
+        .control-bar button {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 更深的阴影 */
+            transition: box-shadow 0.3s; /* 平滑过渡 */
+        }
+
+        .control-bar button:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* 悬停时更深的阴影 */
+        }
+
+        .user-status {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            padding: 5px 20px 5px 15px; /* 调整padding以对齐按钮 */
+            border-radius: 50px; /* 更强的胶囊形状 */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 更深的阴影 */
+            z-index: 10;
+        }
+
+        .user-status span, .user-status button {
+            margin-right: 10px;
+        }
+
+        .user-status button {
+            margin-right: -10px; /* 调整按钮的margin-right以对齐胶囊边缘 */
+            background-color: #007bff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            border-radius: 50%; /* 维持圆形 */
+            padding: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-status button:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* 悬停时更深的阴影 */
+        }
+
+        @media (min-width: 400px) {
+            .data-display > p, .control-bar > button {
+                flex-basis: 45%;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .image-viewer, .right-section {
+                flex-basis: calc(50% - 10px);
+            }
+
+            .right-section {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="user-status">
+        <span>用户：{{userName}}</span>
+        <form action="/logout" method="post">
+            <button type="submit" title="退出登录">⏏</button>
+        </form>
+    </div>
+    <div class="container">
+        <div class="image-viewer">
+            <img src="your-image-url.jpg" alt="Image Viewer" style="max-width: 100%; height: auto;">
+        </div>
+        <div class="right-section">
+            <div class="data-display" style="margin-bottom: 20px;">
+                <p>数据1：...</p>
+                <p>数据2：...</p>
+                <p>数据3：...</p>
+                <p>数据4：...</p>
+            </div>
+            <div class="control-bar">
+                <button>按钮1</button>
+                <button>按钮2</button>
+                <button>按钮3</button>
+                <button>按钮4</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
