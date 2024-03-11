@@ -2803,7 +2803,6 @@ class WSGIRefServer(ServerAdapter):
             srv.serve_forever()
         except KeyboardInterrupt:
             srv.server_close()  # Prevent ResourceWarning: unclosed socket
-        raise
         # change according to https://github.com/bottlepy/bottle/issues/814#issuecomment-653884603 to prevent unclosed socket
 
 
