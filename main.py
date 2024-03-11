@@ -4,7 +4,8 @@ from bottle import route, run, request, template, redirect, response
 userList = ["SamXiao"]
 passwrList = ["2007"]
 
-@route('/')
+@route('/',method='POST')
+@route('/',method='GET')
 def home():
     # 检查是否设置了登录cookie
     is_logged_in = request.get_cookie("is_logged_in")
@@ -16,6 +17,7 @@ def home():
         return template(loginPage, name=None)
 
 @route('/login', method='POST')
+@route('/login', method='GET')
 def login():
     # 获取表单输入
     username = request.forms.get('username')
@@ -32,7 +34,8 @@ def login():
     else:
         return template(loginError, reason="用户 {} 不存在，请检查你的输入".format(username))
 
-@route('/view')
+@route('/view', method='POST')
+@route('/view', method='GET')
 def view_page():
     # 检查是否设置了登录cookie
     is_logged_in = request.get_cookie("is_logged_in")
@@ -45,7 +48,8 @@ def view_page():
         # 未登录，重定向到首页
         redirect('/')
 
-@route('/logout')
+@route('/logout', method='POST')
+@route('/logout', method='GET')
 def logout():
     # 检查是否设置了登录cookie
     is_logged_in = request.get_cookie("is_logged_in")
@@ -58,6 +62,16 @@ def logout():
     else:
         # 重定向到登出失败页面
         redirect('/logoutFailed')
+
+@route('/logoutSuccess', method='POST')
+@route('/logoutSuccess', method='GET')
+def logoutSuccess():
+    return logoutSuccess
+
+@route('/logoutFailed', method='POST')
+@route('/logoutFailed', method='GET')
+def logoutFailed():
+    return logoutFailed
 
 if __name__ == '__main__':
     # 初始化读入模板内容
