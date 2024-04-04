@@ -1,94 +1,116 @@
-from bottle import route, run, request, template, redirect, response
+from bottle import route, run, request, template, redirect, response,static_file
+import dataHandler
 
-# 测试时保留的用户列表
-userList = ["SamXiao"]
-passwrList = ["2007"]
+# Initialize the data handler object
+Boxes = dataHandler.Boxes()
+
+# Read the HTML templates for various pages
+with open("loginPage.html", mode="r", encoding="UTF-8") as t:
+    loginPage = t.read()
+with open("loginError.html", mode="r", encoding="UTF-8") as t:
+    loginError = t.read()
+with open("viewPage.html", mode="r", encoding="UTF-8") as t:
+    viewPage = t.read()
+with open("logoutSuccess.html", mode="r", encoding="UTF-8") as t:
+    logoutSuccess = t.read()
+with open("logoutFailed.html", mode="r", encoding="UTF-8") as t:
+    logoutFailed = t.read()
 
 @route('/',method='POST')
 @route('/',method='GET')
 def home():
-    # 检查是否设置了登录cookie
+    """
+    Home route that checks if the user is logged in.
+    If logged in, it redirects to the view page.
+    If not, it returns the login page.
+    """
     is_logged_in = request.get_cookie("is_logged_in")
     if is_logged_in:
-        # 已登录，重定向到 /view
         redirect('/view')
     else:
-        # 未登录，返回包含表单的 HTML 页面
         return template(loginPage, name=None)
 
 @route('/login', method='POST')
 @route('/login', method='GET')
 def login():
-    # 获取表单输入
+    """
+    Login route that validates the user credentials.
+    If valid, it sets the login cookies and redirects to the view page.
+    If not, it returns the login error page.
+    """
     username = request.forms.get('username')
     password = request.forms.get('password')
-    # 验证登录逻辑
-    if username in userList:
-        if passwrList[userList.index(username)] == password:
-            # 登录成功，设置cookie并重定向到 viewPage 路由
-            response.set_cookie("is_logged_in", "yes", path="/")
-            response.set_cookie("username", username, path="/")  # 设置用户名的cookie
-            redirect('/view')
-        else:
-            return template(loginError, reason="用户所输入的密码错误，请检查后重试")
+    if Boxes.validateUser(username, password):
+        response.set_cookie("is_logged_in", "yes", path="/")
+        response.set_cookie("username", username, path="/")
+        response.set_cookie("token", Boxes.generateToken(username), path="/")
+        redirect('/view')
     else:
-        return template(loginError, reason="用户 {} 不存在，请检查你的输入".format(username))
+        return template(loginError, reason="用户所输入的密码错误，请检查后重试")
 
 @route('/view', method='POST')
 @route('/view', method='GET')
 def view_page():
-    # 检查是否设置了登录cookie
+    """
+    View page route that checks if the user is logged in.
+    If logged in, it validates the token and returns the view page.
+    If not, it redirects to the home page.
+    """
     is_logged_in = request.get_cookie("is_logged_in")
-    if is_logged_in:
-        # 从cookie中获取用户名
+    if is_logged_in== "yes":
         username = request.get_cookie("username")
-        # 显示 viewPage.html 的内容，并传递用户名
-        return template(viewPage, userName=username)
+        token = request.get_cookie("token")
+        if not Boxes.validateToken(username, token):
+            response.delete_cookie("is_logged_in", path="/")
+            response.delete_cookie("username", path="/")
+            response.delete_cookie("token", path="/")
+            return template(loginError, reason="用户登录过期，请重新登录")
+        return template(viewPage, userName=username, box_id=Boxes.getUserBox(username).id, humidity=Boxes.getUserBox(username).getHumidity(), temperature=Boxes.getUserBox(username).getTemp(), imageName="full_img.jpg")
     else:
-        # 未登录，重定向到首页
         redirect('/')
 
 @route('/logout', method='POST')
 @route('/logout', method='GET')
 def logout():
-    # 检查是否设置了登录cookie
+    """
+    Logout route that checks if the user is logged in.
+    If logged in, it deletes the login cookies and returns the logout success page.
+    If not, it returns the logout failed page.
+    """
     is_logged_in = request.get_cookie("is_logged_in")
     if is_logged_in:
-        # 清空cookie来登出用户
         response.delete_cookie("is_logged_in", path="/")
         response.delete_cookie("username", path="/")
-        # 重定向到登出成功页面
-        redirect('/logoutSuccess')
+        response.delete_cookie("token", path="/")
+        return template(logoutSuccess)
     else:
-        # 重定向到登出失败页面
-        redirect('/logoutFailed')
+        return template(logoutFailed)
 
-@route('/logoutSuccess', method='POST')
-@route('/logoutSuccess', method='GET')
-def logoutSuccess():
-    return logoutSuccess
+@route('/pics/<box_id>/<image_name>', method='GET')
+def get_image(box_id, image_name):
+    print(f"Getting image {image_name} from box {box_id}")
+    """
+    Route to get the image of the specified box.
+    """
+    return static_file(image_name, root=f"./data/pics/{box_id}/")
 
-@route('/logoutFailed', method='POST')
-@route('/logoutFailed', method='GET')
-def logoutFailed():
-    return logoutFailed
+@route('/endpoint', method='POST')
+def handle_command():
+    """
+    Endpoint route that handles commands sent from the web client.
+    It performs actions based on the command received.
+    """
+    import json
+    username = request.cookies.get('username')
+    token = request.cookies.get('token')
+    data = request.json
+    command = data['command']
+    if command=='refreshPic':
+        Boxes.getUserBox(username).refreshImage()
+    elif command=='water':
+        Boxes.getUserBox(username).openPump()
+    return json.dumps({'status': 'success'})
 
 if __name__ == '__main__':
-    # 初始化读入模板内容
-    # 登录页
-    with open("loginPage.html", mode="r", encoding="UTF-8") as t:
-        loginPage = t.read()
-    # 登录错误页
-    with open("loginError.html", mode="r", encoding="UTF-8") as t:
-        loginError = t.read()
-    # 登陆后主界面
-    with open("viewPage.html", mode="r", encoding="UTF-8") as t:
-        viewPage = t.read()
-    # 登出成功页
-    with open("logoutSuccess.html", mode="r", encoding="UTF-8") as t:
-        logoutSuccess = t.read()
-    # 登出失败页
-    with open("logoutFailed.html", mode="r", encoding="UTF-8") as t:
-        logoutFailed = t.read()
-
+    # Run the application
     run(host='localhost', port=8080, debug=True)

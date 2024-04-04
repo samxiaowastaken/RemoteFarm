@@ -139,22 +139,41 @@
     </div>
     <div class="container">
         <div class="image-viewer">
-            <img src="your-image-url.jpg" alt="Image Viewer" style="max-width: 100%; height: auto;">
+            <img src="pics/{{box_id}}/{{imageName}}" alt="Image Viewer" style="max-width: 100%; height: auto;">
         </div>
         <div class="right-section">
             <div class="data-display" style="margin-bottom: 20px;">
-                <p>数据1：...</p>
-                <p>数据2：...</p>
-                <p>数据3：...</p>
-                <p>数据4：...</p>
+                <p>当前箱子编号：{{box_id}}</p>
+                <p>湿度：{{humidity}}</p>
+                <p>温度：{{temperature}}</p>
+<!--                <p>数据4：...</p>-->
             </div>
             <div class="control-bar">
-                <button>按钮1</button>
-                <button>按钮2</button>
-                <button>按钮3</button>
-                <button>按钮4</button>
+                <button onclick="sendCommand('refreshPic')">刷新照片</button>
+                <button onclick="sendCommand('water')">浇水</button>
+<!--                <button>按钮3</button>-->
+<!--                <button>按钮4</button>-->
             </div>
         </div>
     </div>
+    <script>
+    function sendCommand(command) {
+        fetch('/endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                command: command
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // 刷新页面
+            location.reload();
+        });
+    }
+    </script>
 </body>
 </html>
