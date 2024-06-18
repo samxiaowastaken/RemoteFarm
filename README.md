@@ -1,8 +1,10 @@
 # 智能种植箱（集群） / RemoteFarm
 
 这个项目是一个基于Python的网络应用，允许用户与一个箱子系统进行交互。每个箱子都配备了温度传感器、泵和相机。应用提供了查看当前温度和湿度、刷新箱子相机捕获的图像以及控制泵的功能。
+这个项目已经停止维护，仅做存档使用。
 
 This project is a Python-based web application that allows users to interact with a system of boxes. Each box is equipped with a temperature sensor, a pump, and a camera. The application provides functionalities such as viewing the current temperature and humidity, refreshing the image captured by the box's camera, and controlling the pump.
+This project is no longer maintained and is for archival use only.
 
 ## 硬件信息 / Hardware Information
 
